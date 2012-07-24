@@ -21,44 +21,43 @@ class Team < ActiveRecord::Base
 }
 
 #looping through teams
-def self.scrape_yahoo_league
-	@teams.each do |team, team_url|
-  	@team = Team.new
-  	@team.name = team
-  	@team.team_url = team_url
-  	team_page = Nokogiri::HTML(open("#{team_url}"))
-    	players = team_page.css(".name").text
-    	players.gsub!(/([A-Z][^A-Z]+)/, '\1 ')
-    	players.gsub!(/([A-Z])/, '\1\2')
-    	players.gsub!(/(Shin-|O') /, '\1')
-    	array_players = players.split(' ')
-    	array_players.each_with_index do |name,index|
-    		if name == "CC"
-        next
-      elsif name == "Ty"
-        next
+  def self.scrape_yahoo_league
+    @teams.each do |team, team_url|
+      @team = Team.new
+      @team.name = team
+      @team.team_url = team_url
+      team_page = Nokogiri::HTML(open("#{team_url}"))
+      players = team_page.css(".name").text
+      players.gsub!(/([A-Z][^A-Z]+)/, '\1 ')
+      players.gsub!(/([A-Z])/, '\1\2')
+      players.gsub!(/(Shin-|O') /, '\1')
+      array_players = players.split(' ')
+      array_players.each_with_index do |name,index|
+        if name == "CC"
+          next
+        elsif name == "Ty"
+          next
         elsif name.length <= 2
           #TODO fix CC outlier
-    			array_players[index] = "#{name} " + "#{array_players[index+1]}"
-    			array_players.delete_at(index+1)
-    		end
-    	end
+          array_players[index] = "#{name} " + "#{array_players[index+1]}"
+          array_players.delete_at(index+1)
+        end
+      end
 
-    	array_players.each_with_index do |player,index| 
-    		@player = Player.new
-    		if index.even?
-    			@player.first_name = player
-    			@player.last_name = array_players[index+1]
-    		elsif player == "De"
-    				 array_players[i] = "De Aza"
-    		else
-    			next
-    		end
-    	@team.players << @player
-    	end
+      array_players.each_with_index do |player,index|
+      @player = Player.new
+        if index.even?
+          @player.first_name = player
+          @player.last_name = array_players[index+1]
+        elsif player == "De"
+         array_players[i] = "De Aza"
+        else
+          next
+        end
+        @team.players << @player
+      end
 
-    	@team.save
-	end   
-end
-
+      @team.save
+    end
+  end
 end

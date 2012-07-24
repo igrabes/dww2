@@ -1,5 +1,6 @@
 require 'spec_helper'
 
 describe Team do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  it "should create a n"
 end

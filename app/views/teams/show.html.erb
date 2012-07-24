@@ -14,12 +14,14 @@
 
 <table>
   <tr>
+    <th>ID</th>
     <th>First name</th>
     <th>Last name</th>
   </tr>
 
 <% @team.players.each do |player| %>
   <tr>
+    <td><%= player.id%></td>
     <td><%= player.first_name %></td>
     <td><%= player.last_name %></td>
   </tr>
